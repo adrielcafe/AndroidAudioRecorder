@@ -1,4 +1,4 @@
-[![Release](https://jitpack.io/v/adrielcafe/AndroidAudioRecorder.svg)](https://jitpack.io/#adrielcafe/AndroidAudioRecorder)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-AndroidAudioRecorder-green.svg?style=true)](https://android-arsenal.com/details/1/4099) [![Release](https://jitpack.io/v/adrielcafe/AndroidAudioRecorder.svg)](https://jitpack.io/#adrielcafe/AndroidAudioRecorder)
 
 # AndroidAudioRecorder
 
