@@ -56,6 +56,7 @@ dependencies {
 ```
 
 ## TODO
+- [ ] Pause audio
 - [ ] Play recorded audio
 - [ ] Tint images to black when background color is too bright
 
