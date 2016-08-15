@@ -30,6 +30,24 @@ public class Util {
                 AUDIO_FREQUENCY);
     }
 
+    /**
+     * Function to check brightness of background color
+     * @param color
+     * @return true if color is bright
+     */
+    public static boolean isBrightColor(int color) {
+        if(android.R.color.transparent == color) {
+            return true;
+        }
+        int [] rgb = {Color.red(color), Color.green(color), Color.blue(color)};
+        int brightness = (int) Math.sqrt(
+                rgb[0] * rgb[0] * 0.241 +
+                rgb[1] * rgb[1] * 0.691 +
+                rgb[2] * rgb[2] * 0.068);
+        //color is bright
+        return brightness >= 200;
+    }
+
     public static int getDarkerColor(int color) {
         float factor = 0.8f;
         int a = Color.alpha(color);

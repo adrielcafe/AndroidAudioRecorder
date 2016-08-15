@@ -32,7 +32,6 @@ public class AudioRecorderActivity extends AppCompatActivity {
     private boolean isRecording;
     private String filePath;
     private int color;
-    private boolean isBright; //variable to check brightness
     private RelativeLayout contentLayout;
     private TextView timerView;
     private ImageView micView;
@@ -68,8 +67,7 @@ public class AudioRecorderActivity extends AppCompatActivity {
         contentLayout.setBackgroundColor(color);
 
         // check to set tint of images
-        isBright = isBrightColor(color);
-        if(isBright) {
+        if(Util.isBrightColor(color)) {
             micView.setColorFilter(Color.BLACK);
             recordView.setColorFilter(Color.BLACK);
             timerView.setTextColor(Color.BLACK);
@@ -188,27 +186,5 @@ public class AudioRecorderActivity extends AppCompatActivity {
                 timerView.setText(Util.formatSeconds(secondsRecorded));
             }
         });
-    }
-
-    /**
-     * Function to check brightness of background color
-     * @param color
-     * @return
-     */
-    public boolean isBrightColor (int color) {
-        if(android.R.color.transparent == color) {
-            return true;
-        }
-
-        int [] rgb = {Color.red(color), Color.green(color), Color.blue(color)};
-
-        int brightness = (int) Math.sqrt(rgb[0]*rgb[0]*0.241
-                + rgb[1]*rgb[1]*0.691 + rgb[2]*rgb[2]*0.068);
-
-        //color is bright
-        if(brightness >= 200) {
-            return true;
-        }
-        return false;
     }
 }
