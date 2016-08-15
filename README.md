@@ -51,14 +51,14 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.3'
+  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.4'
 }
 ```
 
 ## TODO
 - [ ] Pause audio
 - [ ] Play recorded audio
-- [ ] Tint images to black when background color is too bright
+- [X] Tint images to black when background color is too bright
 
 ## Dependencies
 * [OmRecorder](https://github.com/kailash09dabhi/OmRecorder)

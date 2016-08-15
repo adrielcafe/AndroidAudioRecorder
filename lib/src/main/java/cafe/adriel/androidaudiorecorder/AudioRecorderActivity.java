@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -89,13 +90,6 @@ public class AudioRecorderActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        setResult(RESULT_CANCELED);
-        stopRecoding();
-        super.onBackPressed();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.audio_recorder, menu);
         selectMenuItem = menu.findItem(R.id.action_select);
@@ -154,7 +148,9 @@ public class AudioRecorderActivity extends AppCompatActivity {
 
     private void stopRecoding() {
         isRecording = false;
-        selectMenuItem.setVisible(true);
+        if(!isFinishing()) {
+            selectMenuItem.setVisible(true);
+        }
         recordView.setImageResource(R.drawable.ic_play);
 
         if (recorder != null) {
