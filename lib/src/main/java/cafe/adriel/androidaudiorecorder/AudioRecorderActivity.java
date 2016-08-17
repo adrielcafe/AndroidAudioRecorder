@@ -3,17 +3,16 @@ package cafe.adriel.androidaudiorecorder;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.cleveroad.audiovisualization.GLAudioVisualizationView;
 
 import java.io.File;
 import java.util.Timer;
@@ -24,18 +23,21 @@ import omrecorder.OmRecorder;
 import omrecorder.PullTransport;
 import omrecorder.Recorder;
 
-public class AudioRecorderActivity extends AppCompatActivity {
+public class AudioRecorderActivity extends AppCompatActivity implements PullTransport.OnAudioChunkPulledListener {
 
     private Recorder recorder;
+    private VisualizerHandler visualizerHandler;
+
     private Timer timer;
     private MenuItem selectMenuItem;
-    private int secondsRecorded;
-    private boolean isRecording;
     private String filePath;
+    private int secondsRecorded;
     private int color;
+    private boolean isRecording;
+
     private RelativeLayout contentLayout;
+    private GLAudioVisualizationView audioVisualizationView;
     private TextView timerView;
-    private ImageView micView;
     private ImageButton recordView;
 
     @Override
@@ -50,42 +52,62 @@ public class AudioRecorderActivity extends AppCompatActivity {
             getSupportActionBar().setHomeButtonEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setElevation(0);
             getSupportActionBar().setBackgroundDrawable(
                     new ColorDrawable(Util.getDarkerColor(color)));
             getSupportActionBar().setHomeAsUpIndicator(
                     getResources().getDrawable(R.drawable.ic_clear));
         }
 
+        audioVisualizationView = new GLAudioVisualizationView.Builder(this)
+                .setLayersCount(1)
+                .setWavesCount(5)
+                .setWavesHeight(R.dimen.wave_height)
+                .setWavesFooterHeight(R.dimen.footer_height)
+                .setBubblesPerLayer(16)
+                .setBubblesSize(R.dimen.bubble_size)
+                .setBubblesRandomizeSize(true)
+                .setBackgroundColor(Util.getDarkerColor(color))
+                .setLayerColors(new int[]{color})
+                .build();
+
         contentLayout = (RelativeLayout) findViewById(R.id.content);
         timerView = (TextView) findViewById(R.id.timer);
-        micView = (ImageView) findViewById(R.id.mic);
         recordView = (ImageButton) findViewById(R.id.record);
 
-        // to get drawable resources of check icon and clear icon
-        Drawable clear = getResources().getDrawable(R.drawable.ic_clear);
-        Drawable check = getResources().getDrawable(R.drawable.ic_check);
+        contentLayout.setBackgroundColor(Util.getDarkerColor(color));
+        contentLayout.addView(audioVisualizationView, 0);
 
-        contentLayout.setBackgroundColor(color);
+        visualizerHandler = new VisualizerHandler();
+        audioVisualizationView.linkTo(visualizerHandler);
 
-        // check to set tint of images
         if(Util.isBrightColor(color)) {
-            micView.setColorFilter(Color.BLACK);
             recordView.setColorFilter(Color.BLACK);
             timerView.setTextColor(Color.BLACK);
-            clear.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
-            check.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+            getResources().getDrawable(R.drawable.ic_clear)
+                    .setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+            getResources().getDrawable(R.drawable.ic_check)
+                    .setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        audioVisualizationView.onResume();
     }
 
     @Override
     protected void onPause() {
         stopRecoding();
+        audioVisualizationView.onPause();
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
         setResult(RESULT_CANCELED);
+        audioVisualizationView.release();
         super.onDestroy();
     }
 
@@ -108,6 +130,12 @@ public class AudioRecorderActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onAudioChunkPulled(AudioChunk audioChunk) {
+        float amplitude = isRecording ? (float) audioChunk.maxAmplitude() : 0f;
+        visualizerHandler.onDataReceived(amplitude);
+    }
+
     public void toggleRecord(View v) {
         if (isRecording) {
             stopRecoding();
@@ -128,12 +156,8 @@ public class AudioRecorderActivity extends AppCompatActivity {
         timerView.setText("00:00:00");
 
         recorder = OmRecorder.wav(
-                new PullTransport.Default(Util.getMic(), new PullTransport.OnAudioChunkPulledListener() {
-                    @Override
-                    public void onAudioChunkPulled(AudioChunk audioChunk) {
-                        animateMic(audioChunk.maxAmplitude());
-                    }
-                }), new File(filePath));
+                new PullTransport.Default(Util.getMic(), this),
+                new File(filePath));
         recorder.startRecording();
 
         secondsRecorded = 0;
@@ -153,6 +177,10 @@ public class AudioRecorderActivity extends AppCompatActivity {
         }
         recordView.setImageResource(R.drawable.ic_play);
 
+        if(visualizerHandler != null) {
+            visualizerHandler.stop();
+        }
+
         if (recorder != null) {
             recorder.stopRecording();
             recorder = null;
@@ -161,17 +189,6 @@ public class AudioRecorderActivity extends AppCompatActivity {
         if (timer != null) {
             timer.cancel();
         }
-
-        animateMic(0);
-    }
-
-    private void animateMic(double amplitude) {
-        float peak = (float) (amplitude / 150);
-        micView.animate()
-                .scaleX(1 + peak)
-                .scaleY(1 + peak)
-                .setDuration(5)
-                .start();
     }
 
     private void updateTimer() {

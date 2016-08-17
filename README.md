@@ -51,17 +51,20 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.4'
+  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.5'
 }
 ```
 
 ## TODO
+- [X] Record audio
+- [X] Tint images to black when background color is too bright
+- [X] Wave visualization based on this [player concept](https://dribbble.com/shots/2369760-Player-Concept)
 - [ ] Pause audio
 - [ ] Play recorded audio
-- [X] Tint images to black when background color is too bright
 
 ## Dependencies
 * [OmRecorder](https://github.com/kailash09dabhi/OmRecorder)
+* [WaveInApp](https://github.com/Cleveroad/WaveInApp)
 
 ## License
 ```

@@ -14,30 +14,28 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:textSize="40sp"
+        android:textSize="60sp"
         android:textColor="@android:color/white"
+        android:fontFamily="sans-serif-thin"
         android:text="00:00:00"/>
 
-    <ImageView
-        android:id="@+id/mic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:scaleType="center"
-        android:src="@drawable/ic_mic"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/footer_height"
+        android:layout_alignParentBottom="true">
 
-    <ImageButton
-        android:id="@+id/record"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="40dp"
-        android:padding="10dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_play"
-        android:onClick="toggleRecord"
-        style="@style/Widget.AppCompat.Button.Borderless"/>
+        <ImageButton
+            android:id="@+id/record"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="50dp"
+            android:padding="10dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play"
+            android:onClick="toggleRecord"
+            style="@style/Widget.AppCompat.Button.Borderless"/>
 
+    </RelativeLayout>
 
 </RelativeLayout>
