@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">AndroidAudioRecorder</string>
-    <string name="select">Select</string>
+    <string name="save">Save</string>
 </resources>

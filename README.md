@@ -2,7 +2,7 @@
 
 # AndroidAudioRecorder
 
-> A pretty way to record .WAV audio on Android
+> A pretty way to record .wav audio on Android
 
 ![Screenshots](https://raw.githubusercontent.com/adrielcafe/AndroidAudioRecorder/master/screenshots.png)
 
@@ -57,7 +57,7 @@ dependencies {
 
 ## TODO
 - [X] Record audio
-- [X] Tint images to black when background color is too bright
+- [X] Tint images to black when background color is too bright (thanks to [@prakh25](https://github.com/prakh25))
 - [X] Wave visualization based on this [player concept](https://dribbble.com/shots/2369760-Player-Concept)
 - [ ] Pause audio
 - [ ] Play recorded audio

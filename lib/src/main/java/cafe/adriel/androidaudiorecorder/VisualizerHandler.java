@@ -16,12 +16,16 @@ public class VisualizerHandler extends DbmHandler<Float> {
         } else if(amplitude > 0.7){
             amplitude = 1f;
         }
-        dBmArray[0] = amplitude;
-        ampsArray[0] = amplitude;
+        try {
+            dBmArray[0] = amplitude;
+            ampsArray[0] = amplitude;
+        } catch (Exception e){ }
     }
 
     public void stop() {
-        calmDownAndStopRendering();
+        try {
+            calmDownAndStopRendering();
+        } catch (Exception e){ }
     }
 
 }

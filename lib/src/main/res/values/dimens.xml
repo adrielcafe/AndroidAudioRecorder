@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="wave_height">60dp</dimen>
-    <dimen name="bubble_size">25dp</dimen>
+    <dimen name="bubble_size">30dp</dimen>
     <dimen name="footer_height">200dp</dimen>
 </resources>

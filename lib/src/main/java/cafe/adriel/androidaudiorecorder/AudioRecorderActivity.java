@@ -29,16 +29,18 @@ public class AudioRecorderActivity extends AppCompatActivity implements PullTran
     private VisualizerHandler visualizerHandler;
 
     private Timer timer;
-    private MenuItem selectMenuItem;
+    private MenuItem saveMenuItem;
     private String filePath;
-    private int secondsRecorded;
     private int color;
+    private int secondsRecorded;
     private boolean isRecording;
 
     private RelativeLayout contentLayout;
     private GLAudioVisualizationView audioVisualizationView;
     private TextView timerView;
+    private ImageButton restartView;
     private ImageButton recordView;
+    private ImageButton playView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +63,10 @@ public class AudioRecorderActivity extends AppCompatActivity implements PullTran
 
         audioVisualizationView = new GLAudioVisualizationView.Builder(this)
                 .setLayersCount(1)
-                .setWavesCount(5)
+                .setWavesCount(6)
                 .setWavesHeight(R.dimen.wave_height)
                 .setWavesFooterHeight(R.dimen.footer_height)
-                .setBubblesPerLayer(16)
+                .setBubblesPerLayer(20)
                 .setBubblesSize(R.dimen.bubble_size)
                 .setBubblesRandomizeSize(true)
                 .setBackgroundColor(Util.getDarkerColor(color))
@@ -73,16 +75,22 @@ public class AudioRecorderActivity extends AppCompatActivity implements PullTran
 
         contentLayout = (RelativeLayout) findViewById(R.id.content);
         timerView = (TextView) findViewById(R.id.timer);
+        restartView = (ImageButton) findViewById(R.id.restart);
         recordView = (ImageButton) findViewById(R.id.record);
+        playView = (ImageButton) findViewById(R.id.play);
 
         contentLayout.setBackgroundColor(Util.getDarkerColor(color));
         contentLayout.addView(audioVisualizationView, 0);
+        restartView.setVisibility(View.INVISIBLE);
+        playView.setVisibility(View.INVISIBLE);
 
         visualizerHandler = new VisualizerHandler();
         audioVisualizationView.linkTo(visualizerHandler);
 
         if(Util.isBrightColor(color)) {
+            restartView.setColorFilter(Color.BLACK);
             recordView.setColorFilter(Color.BLACK);
+            playView.setColorFilter(Color.BLACK);
             timerView.setTextColor(Color.BLACK);
             getResources().getDrawable(R.drawable.ic_clear)
                     .setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
@@ -99,7 +107,7 @@ public class AudioRecorderActivity extends AppCompatActivity implements PullTran
 
     @Override
     protected void onPause() {
-        stopRecoding();
+        stopRecording();
         audioVisualizationView.onPause();
         super.onPause();
     }
@@ -114,8 +122,8 @@ public class AudioRecorderActivity extends AppCompatActivity implements PullTran
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.audio_recorder, menu);
-        selectMenuItem = menu.findItem(R.id.action_select);
-        selectMenuItem.setIcon(getResources().getDrawable(R.drawable.ic_check));
+        saveMenuItem = menu.findItem(R.id.action_save);
+        saveMenuItem.setIcon(getResources().getDrawable(R.drawable.ic_check));
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -124,7 +132,7 @@ public class AudioRecorderActivity extends AppCompatActivity implements PullTran
         int i = item.getItemId();
         if (i == android.R.id.home) {
             onBackPressed();
-        } else if (i == R.id.action_select) {
+        } else if (i == R.id.action_save) {
             selectAudio();
         }
         return super.onOptionsItemSelected(item);
@@ -136,12 +144,26 @@ public class AudioRecorderActivity extends AppCompatActivity implements PullTran
         visualizerHandler.onDataReceived(amplitude);
     }
 
-    public void toggleRecord(View v) {
+    public void toggleRecording(View v) {
         if (isRecording) {
-            stopRecoding();
+            stopRecording();
         } else {
-            startRecoding();
+            startRecording();
         }
+    }
+
+    public void restartRecording(View v){
+        stopRecording();
+        saveMenuItem.setVisible(false);
+        restartView.setVisibility(View.INVISIBLE);
+        playView.setVisibility(View.INVISIBLE);
+        recordView.setImageResource(R.drawable.ic_rec);
+        timerView.setText("00:00:00");
+        secondsRecorded = 0;
+    }
+
+    public void playRecording(View v){
+        // TODO play recorded audio
     }
 
     private void selectAudio() {
@@ -149,9 +171,11 @@ public class AudioRecorderActivity extends AppCompatActivity implements PullTran
         finish();
     }
 
-    private void startRecoding() {
+    private void startRecording() {
         isRecording = true;
-        selectMenuItem.setVisible(false);
+        saveMenuItem.setVisible(false);
+        restartView.setVisibility(View.INVISIBLE);
+        playView.setVisibility(View.INVISIBLE);
         recordView.setImageResource(R.drawable.ic_stop);
         timerView.setText("00:00:00");
 
@@ -170,12 +194,14 @@ public class AudioRecorderActivity extends AppCompatActivity implements PullTran
         }, 0, 1000);
     }
 
-    private void stopRecoding() {
+    private void stopRecording() {
         isRecording = false;
         if(!isFinishing()) {
-            selectMenuItem.setVisible(true);
+            saveMenuItem.setVisible(true);
         }
-        recordView.setImageResource(R.drawable.ic_play);
+//        restartView.setVisibility(View.VISIBLE);
+//        playView.setVisibility(View.VISIBLE);
+        recordView.setImageResource(R.drawable.ic_rec);
 
         if(visualizerHandler != null) {
             visualizerHandler.stop();

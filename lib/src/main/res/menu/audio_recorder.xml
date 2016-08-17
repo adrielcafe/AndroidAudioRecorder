@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_select"
-        android:title="@string/select"
+        android:id="@+id/action_save"
+        android:title="@string/save"
         android:visible="false"
         app:showAsAction="always"/>
 
