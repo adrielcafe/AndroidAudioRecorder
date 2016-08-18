@@ -13,7 +13,7 @@ import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
 import cafe.adriel.androidaudiorecorder.Util;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String AUDIO_FILE_PATH = Environment.getExternalStorageDirectory() + "/audio.wav";
+    private static final String AUDIO_FILE_PATH = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
     private static final int RECORD_AUDIO = 0;
 
     @Override

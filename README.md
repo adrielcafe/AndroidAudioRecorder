@@ -2,7 +2,7 @@
 
 # AndroidAudioRecorder
 
-> A pretty way to record .wav audio on Android
+> A fancy audio recorder for Android. It supports `WAV` format.
 
 ![Screenshots](https://raw.githubusercontent.com/adrielcafe/AndroidAudioRecorder/master/screenshots.png)
 
@@ -16,7 +16,7 @@
 
 2 - Open the recorder activity
 ```java
-String filePath = Environment.getExternalStorageDirectory() + "/audio.wav";
+String filePath = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
 int color = getResources().getColor(R.color.colorPrimaryDark);
 int requestCode = 0;
 AndroidAudioRecorder.with(this)
