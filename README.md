@@ -31,7 +31,7 @@ AndroidAudioRecorder.with(this)
 @Override
 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
-    if (requestCode == RECORD_AUDIO) {
+    if (requestCode == 0) {
         if (resultCode == RESULT_OK) {
             // Great! User has recorded and saved the audio file
         } else if (resultCode == RESULT_CANCELED) {
@@ -51,7 +51,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.5'
+  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.6'
 }
 ```
 
@@ -59,8 +59,9 @@ dependencies {
 - [X] Record audio
 - [X] Tint images to black when background color is too bright (thanks to [@prakh25](https://github.com/prakh25))
 - [X] Wave visualization based on this [player concept](https://dribbble.com/shots/2369760-Player-Concept)
+- [X] Play recorded audio
 - [ ] Pause audio
-- [ ] Play recorded audio
+- [ ] Skip silence
 
 ## Dependencies
 * [OmRecorder](https://github.com/kailash09dabhi/OmRecorder)
