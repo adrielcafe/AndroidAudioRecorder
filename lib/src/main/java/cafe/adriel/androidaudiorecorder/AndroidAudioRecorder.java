@@ -11,7 +11,7 @@ public class AndroidAudioRecorder {
 
     private Activity activity;
 
-    private String filePath = Environment.getExternalStorageDirectory() + "/audio.wav";
+    private String filePath = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
     private int color = Color.parseColor("#546E7A");
     private int requestCode = 0;
 

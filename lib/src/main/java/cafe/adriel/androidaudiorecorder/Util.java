@@ -5,28 +5,35 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.media.AudioFormat;
 import android.media.MediaRecorder;
+import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import omrecorder.AudioSource;
 
 public class Util {
+    private static final Handler HANDLER = new Handler();
     private static final int AUDIO_FREQUENCY = 44100;
 
     private Util() {
     }
 
     public static void requestPermission(Activity activity, String permission) {
-        if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(activity, permission)
+                != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(activity, new String[]{permission}, 0);
         }
+    }
+
+    public static void wait(int millis, Runnable callback){
+        HANDLER.postDelayed(callback, millis);
     }
 
     public static AudioSource getMic() {
         return new AudioSource.Smart(
                 MediaRecorder.AudioSource.MIC,
                 AudioFormat.ENCODING_PCM_16BIT,
-                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.CHANNEL_IN_STEREO,
                 AUDIO_FREQUENCY);
     }
 

@@ -1,0 +1,5 @@
+<resources>
+    <string name="save">Savar</string>
+    <string name="recording">Gravando</string>
+    <string name="playing">Reproduzindo</string>
+</resources>
