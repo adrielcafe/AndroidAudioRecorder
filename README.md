@@ -51,7 +51,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.6'
+  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.7'
 }
 ```
 
@@ -60,7 +60,7 @@ dependencies {
 - [X] Tint images to black when background color is too bright (thanks to [@prakh25](https://github.com/prakh25))
 - [X] Wave visualization based on this [player concept](https://dribbble.com/shots/2369760-Player-Concept)
 - [X] Play recorded audio
-- [ ] Pause audio
+- [X] Pause recording
 - [ ] Skip silence
 
 ## Dependencies

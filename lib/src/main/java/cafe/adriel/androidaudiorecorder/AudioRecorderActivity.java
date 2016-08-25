@@ -26,8 +26,7 @@ import omrecorder.PullTransport;
 import omrecorder.Recorder;
 
 public class AudioRecorderActivity extends AppCompatActivity
-        implements PullTransport.OnAudioChunkPulledListener,
-        MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
+        implements PullTransport.OnAudioChunkPulledListener, MediaPlayer.OnCompletionListener {
 
     private MediaPlayer player;
     private Recorder recorder;
@@ -38,7 +37,8 @@ public class AudioRecorderActivity extends AppCompatActivity
 
     private Timer timer;
     private MenuItem saveMenuItem;
-    private int secondsElapsed;
+    private int recorderSecondsElapsed;
+    private int playerSecondsElapsed;
     private boolean isRecording;
 
     private RelativeLayout contentLayout;
@@ -120,7 +120,7 @@ public class AudioRecorderActivity extends AppCompatActivity
 
     @Override
     protected void onPause() {
-        stopRecording();
+        restartRecording(null);
         try {
             visualizerView.onPause();
         } catch (Exception e){ }
@@ -169,18 +169,12 @@ public class AudioRecorderActivity extends AppCompatActivity
     }
 
     @Override
-    public void onPrepared(final MediaPlayer mediaPlayer) {
-        if(mediaPlayer != null){
-
-        }
-    }
-
-    @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
         stopPlaying();
     }
 
     private void selectAudio() {
+        stopRecording();
         setResult(RESULT_OK);
         finish();
     }
@@ -191,16 +185,16 @@ public class AudioRecorderActivity extends AppCompatActivity
             @Override
             public void run() {
                 if (isRecording) {
-                    stopRecording();
+                    pauseRecording();
                 } else {
-                    startRecording();
+                    resumeRecording();
                 }
             }
         });
     }
 
     public void togglePlaying(View v){
-        stopRecording();
+        pauseRecording();
         Util.wait(100, new Runnable() {
             @Override
             public void run() {
@@ -217,44 +211,48 @@ public class AudioRecorderActivity extends AppCompatActivity
         stopRecording();
         stopPlaying();
         saveMenuItem.setVisible(false);
+        statusView.setVisibility(View.INVISIBLE);
         restartView.setVisibility(View.INVISIBLE);
         playView.setVisibility(View.INVISIBLE);
         recordView.setImageResource(R.drawable.aar_ic_rec);
         timerView.setText("00:00:00");
-        secondsElapsed = 0;
+        recorderSecondsElapsed = 0;
+        playerSecondsElapsed = 0;
     }
 
-    private void startRecording() {
+    private void resumeRecording() {
         isRecording = true;
         saveMenuItem.setVisible(false);
-        timerView.setText("00:00:00");
         statusView.setText(R.string.aar_recording);
         statusView.setVisibility(View.VISIBLE);
         restartView.setVisibility(View.INVISIBLE);
         playView.setVisibility(View.INVISIBLE);
-        recordView.setImageResource(R.drawable.aar_ic_stop);
+        recordView.setImageResource(R.drawable.aar_ic_pause);
         playView.setImageResource(R.drawable.aar_ic_play);
 
         visualizerHandler = new VisualizerHandler();
         visualizerView.linkTo(visualizerHandler);
 
-        recorder = OmRecorder.wav(
-                new PullTransport.Default(Util.getMic(), AudioRecorderActivity.this),
-                new File(filePath));
-        recorder.startRecording();
+        if(recorder == null) {
+            timerView.setText("00:00:00");
+
+            recorder = OmRecorder.wav(
+                    new PullTransport.Default(Util.getMic(), AudioRecorderActivity.this),
+                    new File(filePath));
+        }
+        recorder.resumeRecording();
 
         startTimer();
     }
 
-    private void stopRecording() {
+    private void pauseRecording() {
         isRecording = false;
         if(!isFinishing()) {
             saveMenuItem.setVisible(true);
         }
-        statusView.setText("");
-        statusView.setVisibility(View.INVISIBLE);
-        // TODO pause and restart recording before showing this button
-//        restartView.setVisibility(View.VISIBLE);
+        statusView.setText(R.string.aar_paused);
+        statusView.setVisibility(View.VISIBLE);
+        restartView.setVisibility(View.VISIBLE);
         playView.setVisibility(View.VISIBLE);
         recordView.setImageResource(R.drawable.aar_ic_rec);
         playView.setImageResource(R.drawable.aar_ic_play);
@@ -266,15 +264,24 @@ public class AudioRecorderActivity extends AppCompatActivity
         }
 
         if (recorder != null) {
-            recorder.stopRecording();
-            recorder = null;
+            recorder.pauseRecording();
         }
 
         stopTimer();
     }
 
+    private void stopRecording(){
+        recorderSecondsElapsed = 0;
+        if (recorder != null) {
+            recorder.stopRecording();
+            recorder = null;
+        }
+        stopTimer();
+    }
+
     private void startPlaying(){
         try {
+            stopRecording();
             player = new MediaPlayer();
             player.setDataSource(filePath);
             player.prepare();
@@ -291,8 +298,9 @@ public class AudioRecorderActivity extends AppCompatActivity
             timerView.setText("00:00:00");
             statusView.setText(R.string.aar_playing);
             statusView.setVisibility(View.VISIBLE);
-            playView.setImageResource(R.drawable.aar_ic_pause);
+            playView.setImageResource(R.drawable.aar_ic_stop);
 
+            playerSecondsElapsed = 0;
             startTimer();
         } catch (Exception e){
             e.printStackTrace();
@@ -308,7 +316,6 @@ public class AudioRecorderActivity extends AppCompatActivity
             try {
                 player.stop();
                 player.reset();
-                player.release();
             } catch (Exception e){ }
         }
 
@@ -325,7 +332,6 @@ public class AudioRecorderActivity extends AppCompatActivity
 
     private void startTimer(){
         stopTimer();
-        secondsElapsed = 0;
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -339,18 +345,22 @@ public class AudioRecorderActivity extends AppCompatActivity
         if (timer != null) {
             timer.cancel();
             timer.purge();
+            timer = null;
         }
     }
 
     private void updateTimer() {
-        if(isRecording || isPlaying()) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    secondsElapsed++;
-                    timerView.setText(Util.formatSeconds(secondsElapsed));
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(isRecording) {
+                    recorderSecondsElapsed++;
+                    timerView.setText(Util.formatSeconds(recorderSecondsElapsed));
+                } else if(isPlaying()){
+                    playerSecondsElapsed++;
+                    timerView.setText(Util.formatSeconds(playerSecondsElapsed));
                 }
-            });
-        }
+            }
+        });
     }
 }
