@@ -1,5 +1,5 @@
 <resources>
-    <string name="aar_save">Savar</string>
+    <string name="aar_save">Salvar</string>
     <string name="aar_paused">Pausado</string>
     <string name="aar_recording">Gravando</string>
     <string name="aar_playing">Reproduzindo</string>

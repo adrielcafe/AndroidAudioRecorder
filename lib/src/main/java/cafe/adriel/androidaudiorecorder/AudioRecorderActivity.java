@@ -129,6 +129,7 @@ public class AudioRecorderActivity extends AppCompatActivity
 
     @Override
     protected void onDestroy() {
+        restartRecording(null);
         setResult(RESULT_CANCELED);
         try {
             visualizerView.release();
@@ -208,8 +209,18 @@ public class AudioRecorderActivity extends AppCompatActivity
     }
 
     public void restartRecording(View v){
-        stopRecording();
-        stopPlaying();
+        if(isRecording) {
+            stopRecording();
+        } else if(isPlaying()) {
+            stopPlaying();
+        } else {
+            visualizerHandler = new VisualizerHandler();
+            visualizerView.linkTo(visualizerHandler);
+            visualizerView.release();
+            if(visualizerHandler != null) {
+                visualizerHandler.stop();
+            }
+        }
         saveMenuItem.setVisible(false);
         statusView.setVisibility(View.INVISIBLE);
         restartView.setVisibility(View.INVISIBLE);
@@ -258,7 +269,6 @@ public class AudioRecorderActivity extends AppCompatActivity
         playView.setImageResource(R.drawable.aar_ic_play);
 
         visualizerView.release();
-
         if(visualizerHandler != null) {
             visualizerHandler.stop();
         }
@@ -271,11 +281,17 @@ public class AudioRecorderActivity extends AppCompatActivity
     }
 
     private void stopRecording(){
+        visualizerView.release();
+        if(visualizerHandler != null) {
+            visualizerHandler.stop();
+        }
+
         recorderSecondsElapsed = 0;
         if (recorder != null) {
             recorder.stopRecording();
             recorder = null;
         }
+
         stopTimer();
     }
 
@@ -312,6 +328,11 @@ public class AudioRecorderActivity extends AppCompatActivity
         statusView.setVisibility(View.INVISIBLE);
         playView.setImageResource(R.drawable.aar_ic_play);
 
+        visualizerView.release();
+        if(visualizerHandler != null) {
+            visualizerHandler.stop();
+        }
+
         if(player != null){
             try {
                 player.stop();
@@ -324,7 +345,7 @@ public class AudioRecorderActivity extends AppCompatActivity
 
     private boolean isPlaying(){
         try {
-            return player != null && player.isPlaying();
+            return player != null && player.isPlaying() && !isRecording;
         } catch (Exception e){
             return false;
         }

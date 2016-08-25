@@ -4,6 +4,8 @@
 
 > A fancy audio recorder for Android. It supports `WAV` format.
 
+![Screenshots](https://raw.githubusercontent.com/adrielcafe/AndroidAudioRecorder/master/demo.gif)
+
 ![Screenshots](https://raw.githubusercontent.com/adrielcafe/AndroidAudioRecorder/master/screenshots.png)
 
 ## How To Use
@@ -51,7 +53,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.7'
+  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.8'
 }
 ```
 
@@ -62,6 +64,7 @@ dependencies {
 - [X] Play recorded audio
 - [X] Pause recording
 - [ ] Skip silence
+- [ ] Animations
 
 ## Dependencies
 * [OmRecorder](https://github.com/kailash09dabhi/OmRecorder)
