@@ -53,7 +53,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.8'
+  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.9'
 }
 ```
 
@@ -65,6 +65,7 @@ dependencies {
 - [X] Pause recording
 - [ ] Skip silence
 - [ ] Animations
+- [ ] Landscape screen orientation (only supports portrait at the moment)
 
 ## Dependencies
 * [OmRecorder](https://github.com/kailash09dabhi/OmRecorder)

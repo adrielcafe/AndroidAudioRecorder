@@ -8,7 +8,8 @@
         android:allowBackup="true">
         <activity
             android:name=".AudioRecorderActivity"
-            android:theme="@style/Theme.AppCompat"/>
+            android:theme="@style/Theme.AppCompat"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

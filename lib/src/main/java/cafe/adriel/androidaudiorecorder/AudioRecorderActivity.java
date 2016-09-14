@@ -156,7 +156,7 @@ public class AudioRecorderActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int i = item.getItemId();
         if (i == android.R.id.home) {
-            onBackPressed();
+            finish();
         } else if (i == R.id.action_save) {
             selectAudio();
         }
