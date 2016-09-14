@@ -71,6 +71,9 @@ dependencies {
 * [OmRecorder](https://github.com/kailash09dabhi/OmRecorder)
 * [WaveInApp](https://github.com/Cleveroad/WaveInApp)
 
+## Want to CONVERT AUDIO into your app?
+**Take a look at [AndroidAudioConverter](https://github.com/adrielcafe/AndroidAudioConverter)!**
+
 ## License
 ```
 The MIT License (MIT)
