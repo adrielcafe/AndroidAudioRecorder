@@ -72,7 +72,7 @@ dependencies {
 * [WaveInApp](https://github.com/Cleveroad/WaveInApp)
 
 ## Want to CONVERT AUDIO into your app?
-**Take a look at [AndroidAudioConverter](https://github.com/adrielcafe/AndroidAudioConverter)!**
+**Take a look at [AndroidAudioConverter](https://github.com/adrielcafe/AndroidAudioConverter)! Example of usage [here](https://github.com/adrielcafe/AndroidAudioRecorder/issues/8#issuecomment-247311572).**
 
 ## License
 ```
