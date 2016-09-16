@@ -10,7 +10,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
-import cafe.adriel.androidaudiorecorder.Util;
+import cafe.adriel.androidaudiorecorder.model.AudioChannel;
+import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
+import cafe.adriel.androidaudiorecorder.model.AudioSource;
 
 public class MainActivity extends AppCompatActivity {
     private static final String AUDIO_FILE_PATH = Environment.getExternalStorageDirectory() + "/recorded_audio.wav";
@@ -44,9 +46,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void recordAudio(View v) {
         AndroidAudioRecorder.with(this)
+                // Required
                 .setFilePath(AUDIO_FILE_PATH)
                 .setColor(getResources().getColor(R.color.recorder_bg))
                 .setRequestCode(RECORD_AUDIO)
+
+                // Optional
+                .setSource(AudioSource.MIC)
+                .setChannel(AudioChannel.STEREO)
+                .setSampleRate(AudioSampleRate.HZ_48000)
+
+                // Start recording
                 .record();
     }
 

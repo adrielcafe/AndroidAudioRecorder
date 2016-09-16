@@ -20,6 +20,9 @@ import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import cafe.adriel.androidaudiorecorder.model.AudioChannel;
+import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
+import cafe.adriel.androidaudiorecorder.model.AudioSource;
 import omrecorder.AudioChunk;
 import omrecorder.OmRecorder;
 import omrecorder.PullTransport;
@@ -28,12 +31,15 @@ import omrecorder.Recorder;
 public class AudioRecorderActivity extends AppCompatActivity
         implements PullTransport.OnAudioChunkPulledListener, MediaPlayer.OnCompletionListener {
 
+    private String filePath;
+    private AudioSource source;
+    private AudioChannel channel;
+    private AudioSampleRate sampleRate;
+    private int color;
+
     private MediaPlayer player;
     private Recorder recorder;
     private VisualizerHandler visualizerHandler;
-
-    private String filePath;
-    private int color;
 
     private Timer timer;
     private MenuItem saveMenuItem;
@@ -56,9 +62,15 @@ public class AudioRecorderActivity extends AppCompatActivity
 
         if(savedInstanceState != null) {
             filePath = savedInstanceState.getString(AndroidAudioRecorder.EXTRA_FILE_PATH);
+            source = (AudioSource) savedInstanceState.getSerializable(AndroidAudioRecorder.EXTRA_SOURCE);
+            channel = (AudioChannel) savedInstanceState.getSerializable(AndroidAudioRecorder.EXTRA_CHANNEL);
+            sampleRate = (AudioSampleRate) savedInstanceState.getSerializable(AndroidAudioRecorder.EXTRA_SAMPLE_RATE);
             color = savedInstanceState.getInt(AndroidAudioRecorder.EXTRA_COLOR);
         } else {
             filePath = getIntent().getStringExtra(AndroidAudioRecorder.EXTRA_FILE_PATH);
+            source = (AudioSource) getIntent().getSerializableExtra(AndroidAudioRecorder.EXTRA_SOURCE);
+            channel = (AudioChannel) getIntent().getSerializableExtra(AndroidAudioRecorder.EXTRA_CHANNEL);
+            sampleRate = (AudioSampleRate) getIntent().getSerializableExtra(AndroidAudioRecorder.EXTRA_SAMPLE_RATE);
             color = getIntent().getIntExtra(AndroidAudioRecorder.EXTRA_COLOR, Color.BLACK);
         }
 
@@ -248,7 +260,7 @@ public class AudioRecorderActivity extends AppCompatActivity
             timerView.setText("00:00:00");
 
             recorder = OmRecorder.wav(
-                    new PullTransport.Default(Util.getMic(), AudioRecorderActivity.this),
+                    new PullTransport.Default(Util.getMic(source, channel, sampleRate), AudioRecorderActivity.this),
                     new File(filePath));
         }
         recorder.resumeRecording();
