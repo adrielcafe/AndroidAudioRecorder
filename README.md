@@ -14,6 +14,7 @@
 ```xml
 <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.WAKE_LOCK" />
 ```
 
 2 - Open the recorder activity
@@ -65,7 +66,7 @@ dependencies {
 }
 ```
 
-## TODO
+## FEATURES
 - [X] Record audio
 - [X] Tint images to black when background color is too bright (thanks to [@prakh25](https://github.com/prakh25))
 - [X] Wave visualization based on this [player concept](https://dribbble.com/shots/2369760-Player-Concept)
