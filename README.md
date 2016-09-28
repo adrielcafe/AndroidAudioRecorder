@@ -32,6 +32,8 @@ AndroidAudioRecorder.with(this)
     .setSource(AudioSource.MIC)
     .setChannel(AudioChannel.STEREO)
     .setSampleRate(AudioSampleRate.HZ_48000)
+    .setAutoStart(true)
+    .setKeepDisplayOn(true)
     
     // Start recording
     .record();
@@ -74,7 +76,7 @@ dependencies {
 - [X] Pause recording
 - [X] Configure audio source (Mic/Camcorder), channel (Stereo/Mono) and sample rate (8kHz to 48kHz)
 - [X] Auto start recording when open activity
-- [X] Keep screen on while recording
+- [X] Keep display on while recording
 - [ ] Skip silence
 - [ ] Animations
 - [ ] Landscape screen orientation (only supports portrait at the moment)
