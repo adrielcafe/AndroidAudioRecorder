@@ -5,10 +5,12 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,6 +38,8 @@ public class AudioRecorderActivity extends AppCompatActivity
     private AudioChannel channel;
     private AudioSampleRate sampleRate;
     private int color;
+    private boolean autoStart;
+    private boolean keepDisplayOn;
 
     private MediaPlayer player;
     private Recorder recorder;
@@ -66,12 +70,20 @@ public class AudioRecorderActivity extends AppCompatActivity
             channel = (AudioChannel) savedInstanceState.getSerializable(AndroidAudioRecorder.EXTRA_CHANNEL);
             sampleRate = (AudioSampleRate) savedInstanceState.getSerializable(AndroidAudioRecorder.EXTRA_SAMPLE_RATE);
             color = savedInstanceState.getInt(AndroidAudioRecorder.EXTRA_COLOR);
+            autoStart = savedInstanceState.getBoolean(AndroidAudioRecorder.EXTRA_AUTO_START);
+            keepDisplayOn = savedInstanceState.getBoolean(AndroidAudioRecorder.EXTRA_KEEP_DISPLAY_ON);
         } else {
             filePath = getIntent().getStringExtra(AndroidAudioRecorder.EXTRA_FILE_PATH);
             source = (AudioSource) getIntent().getSerializableExtra(AndroidAudioRecorder.EXTRA_SOURCE);
             channel = (AudioChannel) getIntent().getSerializableExtra(AndroidAudioRecorder.EXTRA_CHANNEL);
             sampleRate = (AudioSampleRate) getIntent().getSerializableExtra(AndroidAudioRecorder.EXTRA_SAMPLE_RATE);
             color = getIntent().getIntExtra(AndroidAudioRecorder.EXTRA_COLOR, Color.BLACK);
+            autoStart = getIntent().getBooleanExtra(AndroidAudioRecorder.EXTRA_AUTO_START, false);
+            keepDisplayOn = getIntent().getBooleanExtra(AndroidAudioRecorder.EXTRA_KEEP_DISPLAY_ON, false);
+        }
+
+        if(keepDisplayOn){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
 
         if (getSupportActionBar() != null) {
@@ -82,7 +94,7 @@ public class AudioRecorderActivity extends AppCompatActivity
             getSupportActionBar().setBackgroundDrawable(
                     new ColorDrawable(Util.getDarkerColor(color)));
             getSupportActionBar().setHomeAsUpIndicator(
-                    getResources().getDrawable(R.drawable.aar_ic_clear));
+                    ContextCompat.getDrawable(this, R.drawable.aar_ic_clear));
         }
 
         visualizerView = new GLAudioVisualizationView.Builder(this)
@@ -110,15 +122,23 @@ public class AudioRecorderActivity extends AppCompatActivity
         playView.setVisibility(View.INVISIBLE);
 
         if(Util.isBrightColor(color)) {
-            getResources().getDrawable(R.drawable.aar_ic_clear)
+            ContextCompat.getDrawable(this, R.drawable.aar_ic_clear)
                     .setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
-            getResources().getDrawable(R.drawable.aar_ic_check)
+            ContextCompat.getDrawable(this, R.drawable.aar_ic_check)
                     .setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
             statusView.setTextColor(Color.BLACK);
             timerView.setTextColor(Color.BLACK);
             restartView.setColorFilter(Color.BLACK);
             recordView.setColorFilter(Color.BLACK);
             playView.setColorFilter(Color.BLACK);
+        }
+    }
+
+    @Override
+    public void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if(autoStart && !isRecording){
+            toggleRecording(null);
         }
     }
 
@@ -160,7 +180,7 @@ public class AudioRecorderActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.aar_audio_recorder, menu);
         saveMenuItem = menu.findItem(R.id.action_save);
-        saveMenuItem.setIcon(getResources().getDrawable(R.drawable.aar_ic_check));
+        saveMenuItem.setIcon(ContextCompat.getDrawable(this, R.drawable.aar_ic_check));
         return super.onCreateOptionsMenu(menu);
     }
 

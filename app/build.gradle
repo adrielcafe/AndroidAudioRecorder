@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "cafe.adriel.androidaudiorecorder.example"
         minSdkVersion 15
@@ -19,9 +19,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.2.1'
     compile project(':lib')
-//    compile 'com.github.adrielcafe:AndroidAudioRecorder:0.0.7'
+//    compile 'com.github.adrielcafe:AndroidAudioRecorder:0.1.0'
 }
 
 repositories {

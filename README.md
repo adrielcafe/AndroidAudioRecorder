@@ -2,7 +2,7 @@
 
 # AndroidAudioRecorder
 
-> A fancy audio recorder for Android. It supports `WAV` format at 48kHz.
+> A fancy audio recorder for Android. It supports `WAV` format at `48kHz`.
 
 ![Screenshots](https://raw.githubusercontent.com/adrielcafe/AndroidAudioRecorder/master/demo.gif)
 
@@ -61,7 +61,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.1.0'
+  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.2.0'
 }
 ```
 
@@ -72,6 +72,8 @@ dependencies {
 - [X] Play recorded audio
 - [X] Pause recording
 - [X] Configure audio source (Mic/Camcorder), channel (Stereo/Mono) and sample rate (8kHz to 48kHz)
+- [X] Auto start recording when open activity
+- [X] Keep screen on while recording
 - [ ] Skip silence
 - [ ] Animations
 - [ ] Landscape screen orientation (only supports portrait at the moment)

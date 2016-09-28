@@ -16,6 +16,8 @@ public class AndroidAudioRecorder {
     protected static final String EXTRA_SOURCE = "source";
     protected static final String EXTRA_CHANNEL = "channel";
     protected static final String EXTRA_SAMPLE_RATE = "sampleRate";
+    protected static final String EXTRA_AUTO_START = "autoStart";
+    protected static final String EXTRA_KEEP_DISPLAY_ON = "keepDisplayOn";
 
     private Activity activity;
 
@@ -25,6 +27,8 @@ public class AndroidAudioRecorder {
     private AudioSampleRate sampleRate = AudioSampleRate.HZ_44100;
     private int color = Color.parseColor("#546E7A");
     private int requestCode = 0;
+    private boolean autoStart = false;
+    private boolean keepDisplayOn = false;
 
     private AndroidAudioRecorder(Activity activity) {
         this.activity = activity;
@@ -64,6 +68,16 @@ public class AndroidAudioRecorder {
         return this;
     }
 
+    public AndroidAudioRecorder setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
+        return this;
+    }
+
+    public AndroidAudioRecorder setKeepDisplayOn(boolean keepDisplayOn) {
+        this.keepDisplayOn = keepDisplayOn;
+        return this;
+    }
+
     public void record() {
         Intent intent = new Intent(activity, AudioRecorderActivity.class);
         intent.putExtra(EXTRA_FILE_PATH, filePath);
@@ -71,6 +85,8 @@ public class AndroidAudioRecorder {
         intent.putExtra(EXTRA_SOURCE, source);
         intent.putExtra(EXTRA_CHANNEL, channel);
         intent.putExtra(EXTRA_SAMPLE_RATE, sampleRate);
+        intent.putExtra(EXTRA_AUTO_START, autoStart);
+        intent.putExtra(EXTRA_KEEP_DISPLAY_ON, keepDisplayOn);
         activity.startActivityForResult(intent, requestCode);
     }
 
