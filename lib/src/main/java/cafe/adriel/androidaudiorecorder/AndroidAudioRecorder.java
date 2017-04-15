@@ -100,7 +100,7 @@ public class AndroidAudioRecorder {
         activity.startActivityForResult(intent, requestCode);
     }
 
-    public void recordInFragment() {
+    public void recordFromFragment() {
         Intent intent = new Intent(fragment.getActivity(), AudioRecorderActivity.class);
         intent.putExtra(EXTRA_FILE_PATH, filePath);
         intent.putExtra(EXTRA_COLOR, color);
