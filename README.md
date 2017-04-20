@@ -64,7 +64,7 @@ repositories {
 }
 
 dependencies {
-  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.2.0'
+  compile 'com.github.adrielcafe:AndroidAudioRecorder:0.3.0'
 }
 ```
 
