@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import cafe.adriel.androidaudiorecorder.AndroidAudioRecorder;
+import cafe.adriel.androidaudiorecorder.PlayerManager;
 import cafe.adriel.androidaudiorecorder.model.AudioChannel;
 import cafe.adriel.androidaudiorecorder.model.AudioSampleRate;
 import cafe.adriel.androidaudiorecorder.model.AudioSource;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
                 // Start recording
                 .record();
+
     }
 
 }

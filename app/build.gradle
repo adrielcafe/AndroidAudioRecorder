@@ -3,12 +3,12 @@ apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.josco007'
 
 android {
-    compileSdkVersion 24
+    compileSdkVersion 28
     buildToolsVersion "24.0.2"
     defaultConfig {
         applicationId "cafe.adriel.androidaudiorecorder.example"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
     }
@@ -21,7 +21,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:appcompat-v7:28.0.0'
     compile project(':lib')
 //    compile 'com.github.adrielcafe:AndroidAudioRecorder:0.1.0'
 }
