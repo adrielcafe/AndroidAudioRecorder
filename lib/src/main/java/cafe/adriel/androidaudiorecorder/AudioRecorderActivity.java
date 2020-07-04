@@ -3,10 +3,17 @@ package cafe.adriel.androidaudiorecorder;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +26,8 @@ import com.cleveroad.audiovisualization.DbmHandler;
 import com.cleveroad.audiovisualization.GLAudioVisualizationView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -41,7 +50,6 @@ public class AudioRecorderActivity extends AppCompatActivity
     private boolean autoStart;
     private boolean keepDisplayOn;
 
-    private MediaPlayer player;
     private Recorder recorder;
     private VisualizerHandler visualizerHandler;
 
@@ -328,10 +336,45 @@ public class AudioRecorderActivity extends AppCompatActivity
     }
 
     private void startPlaying(){
-        try {
+
+        stopRecording();
+        PlayerManager.getInstance().play(filePath, new PlayerManager.PlayerManagerPlayCallBack() {
+            @Override
+            public void onPlayFinished() {
+                stopPlaying();
+            }
+        });
+
+
+
+        /*visualizerView.linkTo(DbmHandler.Factory.newVisualizerHandler(this, player));
+        visualizerView.post(new Runnable() {
+            @Override
+            public void run() {
+               //player.setOnCompletionListener(AudioRecorderActivity.this);
+
+            }
+        });
+        *
+         */
+
+        timerView.setText("00:00:00");
+        statusView.setText(R.string.aar_playing);
+        statusView.setVisibility(View.VISIBLE);
+        playView.setImageResource(R.drawable.aar_ic_stop);
+
+        playerSecondsElapsed = 0;
+        startTimer();
+
+        /*try {
             stopRecording();
             player = new MediaPlayer();
-            player.setDataSource(filePath);
+            new File(filePath).setReadable(true, false);
+
+            //Uri uri = Uri.parse("android.resource://"+getPackageName()+"/" + R.raw.my_movie);
+            player.setDataSource(this, Uri.parse(new File(filePath).toURI().toString()));
+            player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            //player.setDataSource(filePath);
             player.prepare();
             player.start();
 
@@ -353,6 +396,8 @@ public class AudioRecorderActivity extends AppCompatActivity
         } catch (Exception e){
             e.printStackTrace();
         }
+
+         */
     }
 
     private void stopPlaying(){
@@ -365,22 +410,17 @@ public class AudioRecorderActivity extends AppCompatActivity
             visualizerHandler.stop();
         }
 
-        if(player != null){
-            try {
-                player.stop();
-                player.reset();
-            } catch (Exception e){ }
-        }
+        PlayerManager.getInstance().stop();
+
 
         stopTimer();
     }
 
     private boolean isPlaying(){
-        try {
-            return player != null && player.isPlaying() && !isRecording;
-        } catch (Exception e){
-            return false;
+        if (PlayerManager.getInstance().isPlaying() && !isRecording) {
+            return true;
         }
+        return false;
     }
 
     private void startTimer(){
@@ -406,6 +446,7 @@ public class AudioRecorderActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                Log.i("","is pala"+ isPlaying());
                 if(isRecording) {
                     recorderSecondsElapsed++;
                     timerView.setText(Util.formatSeconds(recorderSecondsElapsed));

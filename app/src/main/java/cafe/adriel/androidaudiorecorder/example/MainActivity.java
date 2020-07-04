@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         Util.requestPermission(this, Manifest.permission.RECORD_AUDIO);
         Util.requestPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
     }
 
     @Override
