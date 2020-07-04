@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class PlayerManager {
 
-    interface PlayerManagerPlayCallBack{
+    public interface PlayerManagerPlayCallBack{
         void onPlayFinished();
     }
 
