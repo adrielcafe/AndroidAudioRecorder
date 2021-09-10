@@ -56,11 +56,17 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 ## Import to your project
 Put this into your `app/build.gradle`:
-```
+```gradle
 repositories {
-  maven {
-    url "https://jitpack.io"
-  }
+    mavenCentral{ //for mavenCentral, jcenter or any other used repository add excludeGroup
+        content {
+            excludeGroup "com.github.adrielcafe"
+        }
+    }
+    maven { url "https://jitpack.io" 
+      // for https://github.com/adrielcafe/AndroidAudioRecorder
+      content { includeGroup "com.github.adrielcafe" }
+    }
 }
 
 dependencies {
